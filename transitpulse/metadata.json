@@ -1,0 +1,6 @@
+{
+  "name": "TransitPulse",
+  "description": "Image-Accurate Real-Time Bus Tracking Web Application with live schedules, route comparison, crowd reporting, and interactive maps.",
+  "requestFramePermissions": ["geolocation", "microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
