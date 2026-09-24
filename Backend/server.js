@@ -1,9 +1,7 @@
 import express from 'express';
 import http from 'http';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import { createServer as createViteServer } from 'vite';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { WebSocketServer } from 'ws';
 import {
   processTransitChat,
@@ -15,14 +13,14 @@ import {
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const PORT = 3000;
 
 async function startServer() {
   const app = express();
   const server = http.createServer(app);
 
+  // CORS so the frontend (on :5173) can call this backend directly if needed
+  app.use(cors({ origin: true, credentials: true }));
   app.use(express.json());
 
   // Health check
@@ -69,7 +67,7 @@ async function startServer() {
     }
   });
 
-  // Set up WebSocket server on /api/live for Gemini Live API
+  // WebSocket server on /api/live for Gemini Live API
   const wss = new WebSocketServer({ noServer: true });
 
   server.on('upgrade', (request, socket, head) => {
@@ -89,7 +87,7 @@ async function startServer() {
       clientWs.send(
         JSON.stringify({
           type: 'error',
-          message: 'Gemini API Key is not configured on the server. Please check the Secrets panel.',
+          message: 'Gemini API Key is not configured on the server.',
         })
       );
       clientWs.close();
@@ -97,7 +95,6 @@ async function startServer() {
     }
 
     try {
-      // Connect to Gemini 3.8 Live API
       const liveSession = await ai.live.connect({
         model: 'gemini-3.8-live',
         config: {
@@ -140,9 +137,7 @@ async function startServer() {
       });
 
       clientWs.on('close', () => {
-        try {
-          liveSession.close();
-        } catch (e) {}
+        try { liveSession.close(); } catch (e) {}
       });
     } catch (err) {
       console.error('Live connect error:', err);
@@ -150,27 +145,12 @@ async function startServer() {
     }
   });
 
-  // Mount Vite middleware in development
-  if (process.env.NODE_ENV !== 'production') {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: 'spa',
-    });
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(__dirname, 'dist');
-    app.use(express.static(distPath));
-    app.get('*', (req, res) => {
-      res.sendFile(path.join(distPath, 'index.html'));
-    });
-  }
-
   server.listen(PORT, '0.0.0.0', () => {
-    console.log(`TransitPulse Full-Stack Server listening on http://0.0.0.0:${PORT}`);
+    console.log(`TransitPulse Backend listening on http://0.0.0.0:${PORT}`);
   });
 }
 
 startServer().catch((err) => {
-  console.error('Failed to start TransitPulse server:', err);
+  console.error('Failed to start TransitPulse backend:', err);
   process.exit(1);
 });
