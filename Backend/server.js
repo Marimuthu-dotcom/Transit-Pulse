@@ -61,7 +61,8 @@ async function startServer() {
     try {
       const result = await processTTS(req.body);
       return res.json(result);
-    } catch (err) {
+    } 
+    catch (err) {
       console.error('Error in /api/ai/tts:', err);
       return res.json({ useClientSynthesis: true, text: req.body?.text || '' });
     }
@@ -72,8 +73,10 @@ async function startServer() {
 
   server.on('upgrade', (request, socket, head) => {
     const pathname = new URL(request.url, `http://${request.headers.host}`).pathname;
-    if (pathname === '/api/live' || pathname === '/ws/live') {
-      wss.handleUpgrade(request, socket, head, (ws) => {
+    if (pathname === '/api/live' || pathname === '/ws/live') 
+    {
+      wss.handleUpgrade(request, socket, head, (ws) => 
+      {
         wss.emit('connection', ws, request);
       });
     }

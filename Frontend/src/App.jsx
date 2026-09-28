@@ -126,7 +126,7 @@ export default function App() {
           <button
             type="button"
             onClick={() => setIsVoiceOpen(true)}
-            className="group relative flex items-center gap-2 px-4 py-3 rounded-full bg-gradient-to-r from-amber-500 to-[#F5B700] text-black font-extrabold text-xs shadow-2xl hover:scale-105 hover:brightness-110 active:scale-95 transition-all duration-300 border-2 border-amber-300 cursor-pointer"
+            className={`group relative flex items-center gap-2 px-4 py-3 rounded-full bg-linear-to-r from-amber-500 to-[#F5B700] text-black font-extrabold text-xs shadow-2xl hover:scale-105 hover:brightness-110 active:scale-95 transition-all duration-300 border-2 border-amber-300 cursor-pointer`}
             title="Ask TransitPulse AI Voice Assistant"
           >
             {/* Pulsing ring */}

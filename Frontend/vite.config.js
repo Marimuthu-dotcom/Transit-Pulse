@@ -20,6 +20,7 @@ export default defineConfig(() => {
       host: '0.0.0.0',
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
+      open: true,
       proxy: {
         // Forward API calls to the Express backend
         '/api': {

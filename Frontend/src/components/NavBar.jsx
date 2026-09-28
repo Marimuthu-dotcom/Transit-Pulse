@@ -26,7 +26,7 @@ export default function NavBar({ isDark = false }) {
   };
 
   const bgClass = isDark
-    ? "bg-[#0d111a] border-b border-gray-800/80 text-white"
+    ? "bg-[#ffffff] border-b border-gray-800/80 text-white"
     : "bg-white border-b border-gray-200/80 text-gray-900";
 
   return (
@@ -40,7 +40,7 @@ export default function NavBar({ isDark = false }) {
             </svg>
           </div>
           <span className="font-bold text-lg tracking-tight">
-            <span className={isDark ? "text-white" : "text-gray-950"}>Transit</span>
+            <span className="text-gray-950">Transit</span>
             <span className="text-[#F5B700]">Pulse</span>
           </span>
         </Link>
@@ -56,11 +56,11 @@ export default function NavBar({ isDark = false }) {
                 className={`relative px-3.5 py-2 text-sm font-medium transition-colors ${
                   active
                     ? isDark
-                      ? "text-white font-semibold"
+                      ? "text-gray-950 font-semibold"
                       : "text-gray-950 font-semibold"
                     : isDark
-                    ? "text-gray-400 hover:text-gray-200"
-                    : "text-gray-600 hover:text-gray-950"
+                    ? "text-gray-950 hover:text-yellow-500"
+                    : "text-gray-950 hover:text-yellow-500"
                 }`}
               >
                 <span>{item.name}</span>
@@ -86,8 +86,8 @@ export default function NavBar({ isDark = false }) {
             title="Refresh Live Transit Feed"
             className={`p-2 rounded-full transition-colors ${
               isDark
-                ? "text-gray-400 hover:text-white hover:bg-gray-800"
-                : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                ? "text-gray-500 hover:text-white hover:bg-gray-800"
+                : "text-gray-500 hover:text-white hover:bg-gray-800"
             }`}
           >
             <RefreshCw className="w-4 h-4" />
@@ -99,8 +99,8 @@ export default function NavBar({ isDark = false }) {
             title="Notifications Hub"
             className={`relative p-2 rounded-full transition-colors ${
               isDark
-                ? "text-gray-400 hover:text-white hover:bg-gray-800"
-                : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                ? "text-gray-500 hover:text-white hover:bg-gray-800"
+                : "text-gray-500 hover:text-white hover:bg-gray-800"
             }`}
           >
             <Bell className="w-4 h-4" />
@@ -115,8 +115,8 @@ export default function NavBar({ isDark = false }) {
             title="Profile & Settings"
             className={`p-2 rounded-full transition-colors ${
               isDark
-                ? "text-gray-400 hover:text-white hover:bg-gray-800"
-                : "text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                ? "text-gray-500 hover:text-white hover:bg-gray-800"
+                : "text-gray-500 hover:text-white hover:bg-gray-800"
             }`}
           >
             <Settings className="w-4 h-4" />
@@ -128,7 +128,7 @@ export default function NavBar({ isDark = false }) {
               onClick={() => setShowDropdown(!showDropdown)}
               className={`flex items-center gap-2.5 pl-1.5 pr-2.5 py-1 rounded-full border transition-all ${
                 isDark
-                  ? "border-gray-800 bg-[#161c28] hover:border-gray-700 text-left"
+                  ? "border-gray-200 bg-[#ffffff] hover:border-gray-300 text-left"
                   : "border-gray-200 bg-white hover:border-gray-300 text-left shadow-xs"
               }`}
             >
@@ -138,7 +138,7 @@ export default function NavBar({ isDark = false }) {
                 className="w-7 h-7 rounded-full object-cover ring-1 ring-[#F5B700]"
               />
               <div className="hidden sm:flex flex-col text-left leading-tight">
-                <span className={`text-xs font-bold ${isDark ? "text-gray-200" : "text-gray-900"}`}>
+                <span className={`text-xs font-bold ${isDark ? "text-gray-900" : "text-gray-900"}`}>
                   {user.nickname || user.name}
                 </span>
                 <span className="text-[10px] text-gray-400 font-medium">
@@ -150,11 +150,9 @@ export default function NavBar({ isDark = false }) {
             {/* Dropdown Menu */}
             {showDropdown && (
               <div
-                className={`absolute right-0 mt-2 w-48 rounded-xl shadow-lg border py-1.5 z-50 text-sm animate-in fade-in slide-in-from-top-1 ${
-                  isDark
-                    ? "bg-[#161c28] border-gray-700 text-gray-200"
-                    : "bg-white border-gray-200 text-gray-800"
-                }`}
+                className={`absolute right-0 mt-2 w-48 rounded-xl shadow-lg border py-1.5 z-50 text-sm animate-in fade-in slide-in-from-top-1 
+                  bg-[#161c28] border-gray-700 text-gray-200 
+                `}
               >
                 <div className="px-3 py-2 border-b border-gray-100 dark:border-gray-700/60">
                   <p className="text-xs font-semibold">{user.name}</p>

@@ -30,7 +30,7 @@ export default function HomePage() {
       <NavBar isDark={true} />
 
       {/* Hero Transit Map Section */}
-      <div className="relative w-full overflow-hidden bg-radial from-[#121929] to-[#0a0d14] pt-8 pb-16 lg:py-16">
+      <div className="relative w-full overflow-hidden bg-[#000000] pt-8 pb-16 lg:py-16">
         {/* Transit Line SVG Background Graphics */}
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <svg className="w-full h-full" viewBox="0 0 1440 800" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,11 +141,11 @@ export default function HomePage() {
               </p>
 
               {/* Floating Dark Search Form Card */}
-              <div className="mt-8 bg-[#111622]/90 backdrop-blur-md rounded-2xl border border-gray-700/70 p-3 sm:p-4 shadow-2xl">
+              <div className="mt-8 bg-[#000000]/90 backdrop-blur-md rounded-2xl border border-gray-700/60 p-3 sm:p-4 shadow-2xl">
                 <form onSubmit={handleSearch} className="flex flex-col gap-3">
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
                     {/* Departure Point */}
-                    <div className="bg-[#182133] rounded-xl border border-gray-700/60 px-3.5 py-2.5 flex flex-col justify-center">
+                    <div className="bg-[#222222] rounded-xl border border-gray-700/60 px-3.5 py-2.5 flex flex-col justify-center">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
                         Departure Point
                       </label>
@@ -162,7 +162,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Destination */}
-                    <div className="bg-[#182133] rounded-xl border border-gray-700/60 px-3.5 py-2.5 flex flex-col justify-center">
+                    <div className="bg-[#222222] rounded-xl border border-gray-700/60 px-3.5 py-2.5 flex flex-col justify-center">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-[#F5B700]">
                         Destination
                       </label>
@@ -179,7 +179,7 @@ export default function HomePage() {
                     </div>
 
                     {/* Departure Time */}
-                    <div className="bg-[#182133] rounded-xl border border-gray-700/60 px-3.5 py-2.5 flex flex-col justify-center">
+                    <div className="bg-[#222222] rounded-xl border border-gray-700/60 px-3.5 py-2.5 flex flex-col justify-center">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
                         Departure Time
                       </label>
@@ -212,7 +212,7 @@ export default function HomePage() {
 
             {/* Right: Live Pulse Status Card */}
             <div className="lg:col-span-4 self-end">
-              <div className="bg-[#111622]/90 backdrop-blur-md rounded-2xl border border-gray-700/70 p-5 shadow-xl">
+              <div className="bg-[#000000]/90 backdrop-blur-md rounded-2xl border border-gray-700/70 p-5 shadow-xl">
                 <div className="flex items-center gap-2 pb-3 border-b border-gray-800">
                   <Activity className="w-4 h-4 text-[#F5B700]" />
                   <h3 className="text-sm font-bold text-gray-200">Live Pulse Status</h3>
