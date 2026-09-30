@@ -49,6 +49,7 @@ export default function NavBar({ isDark = false }) {
         <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
           {navItems.map((item) => {
             const active = isActive(item.path);
+            
             return (
               <Link
                 key={item.name}
@@ -56,8 +57,8 @@ export default function NavBar({ isDark = false }) {
                 className={`relative px-3.5 py-2 text-sm font-medium transition-colors ${
                   active
                     ? isDark
-                      ? "text-gray-950 font-semibold"
-                      : "text-gray-950 font-semibold"
+                      ? "text-yellow-500 font-semibold"
+                      : "text-yellow-500 font-semibold"
                     : isDark
                     ? "text-gray-950 hover:text-yellow-500"
                     : "text-gray-950 hover:text-yellow-500"
@@ -71,7 +72,7 @@ export default function NavBar({ isDark = false }) {
                 )}
                 {/* Active Indicator Underline (Matches images) */}
                 {active && (
-                  <span className="absolute bottom-0 left-3 right-3 h-[3px] bg-[#F5B700] rounded-full" />
+                  <span className="absolute bottom-0 left-3 right-3 h-0.75 bg-[#F5B700] rounded-full" />
                 )}
               </Link>
             );

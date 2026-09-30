@@ -22,24 +22,49 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 
+// ─── NEW: socket singleton ───
+import { socket } from './socket/socket.js';
+
 export default function App() {
   const [quotaExceeded, setQuotaExceeded] = useState(false);
   const [isVoiceOpen, setIsVoiceOpen] = useState(false);
 
+  // Existing quota listener — untouched
   useEffect(() => {
-    const handleQuotaExceeded = () => {
-      setQuotaExceeded(true);
-    };
+    const handleQuotaExceeded = () => setQuotaExceeded(true);
     window.addEventListener('gmp-quota-exceeded', handleQuotaExceeded);
-    return () => {
-      window.removeEventListener('gmp-quota-exceeded', handleQuotaExceeded);
-    };
+    return () => window.removeEventListener('gmp-quota-exceeded', handleQuotaExceeded);
   }, []);
+
+  // ─── NEW: connect the socket as soon as the app mounts ───
+  useEffect(() => {
+    // 1. Open the connection
+    socket.connect();
+
+    // 2. On connect, log the socket ID (this is what you asked for)
+    const onConnect = () => {
+      console.log('✅ Socket ID:', socket.id);
+    };
+    socket.on('connect', onConnect);
+
+    // 3. (Optional) log when the backend broadcasts something
+    const onUserOnline  = ({ userId }) => console.log('user-online', userId);
+    const onUserOffline = ({ userId, last_seen }) => console.log('user-offline', userId, last_seen);
+    socket.on('user-online',  onUserOnline);
+    socket.on('user-offline', onUserOffline);
+
+    // 4. Cleanup — runs on unmount (and Satisfies StrictMode)
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('user-online',  onUserOnline);
+      socket.off('user-offline', onUserOffline);
+      socket.disconnect();
+    };
+  }, []); // ← empty deps: run once when App mounts
 
   return (
     <TransitProvider>
       <Router>
-        {/* Tier 1 Mandated Google Maps Quota Banner */}
         {quotaExceeded && (
           <div className="bg-amber-500 text-black px-4 py-2 text-center text-sm font-medium z-50 shadow-md">
             Maps API quota exceeded. Some map features may be unavailable.
@@ -47,7 +72,6 @@ export default function App() {
         )}
 
         <Routes>
-          {/* Public Pages */}
           <Route path="/" element={<HomePage />} />
           <Route path="/search" element={<SearchFormPage />} />
           <Route path="/search/results" element={<SearchResultsPage />} />
@@ -58,70 +82,18 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
 
-          {/* Protected Commuter Pages */}
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/routes"
-            element={
-              <ProtectedRoute>
-                <SavedRoutesPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/stops"
-            element={
-              <ProtectedRoute>
-                <SavedStopsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/report"
-            element={
-              <ProtectedRoute>
-                <ReportCrowdPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/history"
-            element={
-              <ProtectedRoute>
-                <TripHistoryPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <ProtectedRoute>
-                <NotificationsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfileSettingsPage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/routes" element={<ProtectedRoute><SavedRoutesPage /></ProtectedRoute>} />
+          <Route path="/stops" element={<ProtectedRoute><SavedStopsPage /></ProtectedRoute>} />
+          <Route path="/report" element={<ProtectedRoute><ReportCrowdPage /></ProtectedRoute>} />
+          <Route path="/history" element={<ProtectedRoute><TripHistoryPage /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><ProfileSettingsPage /></ProtectedRoute>} />
 
-          {/* Fallback 404 */}
           <Route path="/404" element={<NotFoundPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
 
-        {/* Global Floating AI Voice Assistant Button */}
         <div className="fixed bottom-5 right-5 z-40">
           <button
             type="button"
@@ -129,16 +101,13 @@ export default function App() {
             className={`group relative flex items-center gap-2 px-4 py-3 rounded-full bg-linear-to-r from-amber-500 to-[#F5B700] text-black font-extrabold text-xs shadow-2xl hover:scale-105 hover:brightness-110 active:scale-95 transition-all duration-300 border-2 border-amber-300 cursor-pointer`}
             title="Ask TransitPulse AI Voice Assistant"
           >
-            {/* Pulsing ring */}
             <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-black animate-pulse" />
-
             <Mic className="w-4 h-4 text-black group-hover:rotate-12 transition-transform" />
             <span className="hidden sm:inline tracking-tight">Transit AI Voice</span>
             <Sparkles className="w-3.5 h-3.5 text-black" />
           </button>
         </div>
 
-        {/* Global Voice Assistant Dialog */}
         <TransitVoiceAssistant
           isOpen={isVoiceOpen}
           onClose={() => setIsVoiceOpen(false)}
@@ -147,4 +116,3 @@ export default function App() {
     </TransitProvider>
   );
 }
-

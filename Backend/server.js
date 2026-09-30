@@ -1,3 +1,59 @@
+import http from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+import { createApp } from './src/app.js';
+import { initSockets } from './src/sockets/index.js';
+import { PORT, HOST, CORS_ORIGIN } from './src/config/env.js';
+import { pingDatabase } from './src/config/db.js';
+
+async function startServer() {
+  try {
+    await pingDatabase();
+    console.log('✅ Database reachable');
+  } catch (err) 
+  {
+    console.error('❌ Database unreachable at startup:', err.message);
+    // Either exit(1) to fail fast, or continue and let /api/health report it
+  }
+
+  // 1. Express app (middleware + routes live in src/app.js)
+  const app = createApp();
+
+  // 2. HTTP server
+  const server = http.createServer(app);
+
+  // 3. Socket.IO for continuous connection
+  const io = new SocketIOServer(server, {
+    cors: { origin: CORS_ORIGIN, credentials: true },
+    path: '/socket.io',
+  });
+
+  initSockets(io);
+
+  // 4. Listen
+  server.listen(PORT, HOST, () => 
+  {
+    console.log(`TransitPulse Backend listening on http://${HOST}:${PORT}`);
+    console.log(`Socket.IO ready on ws://${HOST}:${PORT}/socket.io`);
+  });
+
+  // 5. Graceful shutdown
+  const shutdown = () => {
+    console.log('Shutting down...');
+    io.close();
+    server.close(() => process.exit(0));
+  };
+
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
+}
+
+startServer().catch((err) => {
+  console.error('Failed to start TransitPulse backend:', err);
+  process.exit(1);
+}); 
+
+/* 
+
 import express from 'express';
 import http from 'http';
 import dotenv from 'dotenv';
@@ -157,3 +213,5 @@ startServer().catch((err) => {
   console.error('Failed to start TransitPulse backend:', err);
   process.exit(1);
 });
+
+*/
