@@ -47,3 +47,18 @@
 .animate-transit-pulse {
   animation: transit-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   AuthPage — Route loop drawing animation
+   The solid yellow line traces the whole loop once on mount,
+   then stays in place. The bus follows continuously via SVG
+   <animateMotion>, which needs no CSS.
+   ───────────────────────────────────────────────────────────── */
+@keyframes route-loop-trace {
+  from { stroke-dashoffset: 1200; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.route-loop-trace {
+  animation: route-loop-trace 3s ease-out forwards;
+}

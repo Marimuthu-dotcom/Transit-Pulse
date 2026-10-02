@@ -8,6 +8,7 @@ import { CORS_ORIGIN } from './config/env.js';
 import healthRoutes  from './routes/health.routes.js';
 import transitRoutes from './routes/transit.routes.js';
 import aiRoutes      from './routes/ai.routes.js';
+import authRoutes    from './routes/auth.routes.js';   // NEW
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname  = path.dirname(__filename);
@@ -24,13 +25,12 @@ export function createApp() {
   app.use('/api/health',  healthRoutes);
   app.use('/api/transit', transitRoutes);
   app.use('/api/ai',      aiRoutes);
+  app.use('/api/auth',    authRoutes);   // NEW
 
-  // ── 404 ──
   app.use((req, res) => {
     res.status(404).json({ error: 'Not found', path: req.path });
   });
 
-  // ── Central error handler ──
   app.use((err, req, res, _next) => {
     console.error('Unhandled error:', err);
     res.status(500).json({ error: err.message });

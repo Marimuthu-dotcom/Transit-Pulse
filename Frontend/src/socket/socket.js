@@ -1,11 +1,8 @@
 import { io } from 'socket.io-client';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
-
-export const socket = io(BACKEND_URL, {
+export const socket = io({
   withCredentials: true,     // send cookies for auth
   autoConnect: false,        // don't connect until we say so (after login)
-  transports: ['websocket'], // force WebSocket (optional but faster)
 });
 
 // Dev-only logging so you can see what's happening
