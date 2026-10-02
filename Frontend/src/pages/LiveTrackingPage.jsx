@@ -57,13 +57,13 @@ export default function LiveTrackingPage() {
   const isOffline = bus.isLiveConfirmed === false && (bus.status?.includes('OFFLINE') || bus.status?.includes('NO RECENT'));
 
   return (
-    <div className="min-h-screen bg-[#0a0d14] text-white flex flex-col selection:bg-[#F5B700] selection:text-black">
+    <div className="min-h-screen bg-[#ffffff] text-white flex flex-col selection:bg-[#F5B700] selection:text-black">
       <NavBar isDark={true} />
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 flex flex-col">
         
         {/* Top Corridor & Vehicle Quick Switcher Strip */}
-        <div className="mb-4 bg-[#0e131d] p-2.5 sm:p-3 rounded-2xl border border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xl">
+        <div className="mb-4 bg-[#ffffff] p-2.5 sm:p-3 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_12px_2px_rgba(0,0,0,0.15)]">
           <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
             <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
               <Bus className="w-3.5 h-3.5 text-[#F5B700]" /> Fleet:
@@ -170,7 +170,7 @@ export default function LiveTrackingPage() {
           <div className="lg:col-span-8 bg-[#0e131d] rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col min-h-[520px] lg:min-h-[660px] shadow-2xl">
             
             {/* Map Header Overlay */}
-            <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-20 pointer-events-none">
+            <div className="absolute top-14 left-2 sm:top-14 sm:left-2 z-20 pointer-events-none">
               <div className="bg-[#121824]/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-gray-700/80 shadow-lg">
                 <div className="flex items-center gap-2">
                   <h2 className="text-xs sm:text-sm font-extrabold tracking-wider text-gray-100 uppercase">

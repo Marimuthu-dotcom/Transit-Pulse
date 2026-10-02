@@ -95,7 +95,7 @@ export default function TransitGoogleMap({
   const [selectedBusId, setSelectedBusId] = useState(activeVehicleId);
   const [activeInfoWindow, setActiveInfoWindow] = useState(null);
   const [corridorView, setCorridorView] = useState('auto'); // 'auto', 'metro', 'intercity'
-  const [mapType, setMapType] = useState('roadmap');
+  const [mapType, setMapType] = useState('hybrid');
 
   const activeBus = buses[selectedBusId] || buses[activeVehicleId] || Object.values(buses)[0];
 

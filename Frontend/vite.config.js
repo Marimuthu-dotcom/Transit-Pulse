@@ -28,6 +28,11 @@ export default defineConfig(() => {
           changeOrigin: true,
           ws: true, // enable WebSocket proxying on /api/live
         },
+        '/socket.io': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          ws: true,           // ← critical for WebSocket
+        },
       },
     },
   };

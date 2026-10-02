@@ -3,10 +3,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 let aiClient = null;
-export function getGenAI() {
+
+export function getGenAI() 
+{
   if (!aiClient) {
     const key = process.env.GEMINI_API_KEY;
-    if (!key) {
+    if (!key) 
+    {
       return null;
     }
     aiClient = new GoogleGenAI({
@@ -51,9 +54,11 @@ RULES:
      - null if general question
 `;
 
-export async function processTransitChat(body) {
+export async function processTransitChat(body) 
+{
   const { message, transitContext = {} } = body;
-  if (!message || typeof message !== 'string') {
+  if (!message || typeof message !== 'string') 
+  {
     throw new Error('Message text is required');
   }
 
