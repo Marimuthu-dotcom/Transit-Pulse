@@ -73,18 +73,19 @@ export default function AuthPage({ mode = 'login' }) {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    setError("");
-    setSubmitting(true);
-    try {
-      await googleLogin(credentialResponse.credential);
-      navigate(from, { replace: true });
-    } catch (err) {
-      setError(err.message || "Google authentication failed.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+ const handleGoogleSuccess = async (credentialResponse) => {
+  setError("");
+  setSubmitting(true);
+  try {
+    // Pass the mode as the intent: 'login' or 'signup'
+    await googleLogin(credentialResponse.credential, isLogin ? 'login' : 'signup');
+    navigate(from, { replace: true });
+  } catch (err) {
+    setError(err.message || "Google authentication failed.");
+  } finally {
+    setSubmitting(false);
+  }
+ };
 
   const handleGoogleError = () => {
     setError(isLogin ? "Google sign-in failed." : "Google sign-up failed.");
@@ -346,7 +347,24 @@ export default function AuthPage({ mode = 'login' }) {
 
             {error && (
               <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-semibold">
-                {error}
+                <div>{error}</div>
+                {/* Show a link to the other page when there's an account-state mismatch */}
+                {error.includes('No account found') && (
+                  <Link
+                    to="/register"
+                    className="inline-block mt-2 text-[#F5B700] font-bold hover:underline"
+                  >
+                    Create an account →
+                  </Link>
+                )}
+                {error.includes('already exists') && (
+                  <Link
+                    to="/login"
+                    className="inline-block mt-2 text-[#F5B700] font-bold hover:underline"
+                  >
+                    Sign in instead →
+                  </Link>
+                )}
               </div>
             )}
 

@@ -63,80 +63,80 @@ export default function LiveTrackingPage() {
       <main className="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 lg:p-8 flex flex-col">
         
         {/* Top Corridor & Vehicle Quick Switcher Strip */}
-        <div className="mb-4 bg-[#ffffff] p-2.5 sm:p-3 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_0_12px_2px_rgba(0,0,0,0.15)]">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
-            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
-              <Bus className="w-3.5 h-3.5 text-[#F5B700]" /> Fleet:
-            </span>
+        <div className="mb-4 bg-white p-2.5 sm:p-3 rounded-2xl flex flex-col border border-gray-200 sm:flex-row sm:items-center justify-between gap-3 shadow-sm">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0 no-scrollbar">
+          <span className="text-[11px] font-bold text-gray-500 uppercase tracking-wider shrink-0 mr-1 flex items-center gap-1.5">
+            <Bus className="w-3.5 h-3.5 text-[#B8860B]" /> Fleet:
+          </span>
 
-            {Object.values(buses).map((b) => {
-              const isSelected = b.vehicleId === activeId;
-              const isLive = b.isLiveConfirmed !== false;
+          {Object.values(buses).map((b) => {
+            const isSelected = b.vehicleId === activeId;
+            const isLive = b.isLiveConfirmed !== false;
 
-              return (
-                <button
-                  key={b.vehicleId}
-                  onClick={() => handleSelectVehicle(b.vehicleId)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap cursor-pointer ${
-                    isSelected
-                      ? 'bg-[#F5B700] text-black shadow-lg ring-2 ring-[#F5B700]/30'
-                      : 'bg-[#121824] text-gray-300 hover:text-white hover:bg-gray-800 border border-gray-700/60'
+            return (
+              <button
+                key={b.vehicleId}
+                onClick={() => handleSelectVehicle(b.vehicleId)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap cursor-pointer ${
+                  isSelected
+                    ? 'bg-[#F5B700] text-black shadow-sm ring-2 ring-[#F5B700]/40'
+                    : 'bg-gray-100 text-gray-700 hover:text-gray-900 hover:bg-gray-200 border border-gray-200'
+                }`}
+              >
+                <span>{b.vehicleId}</span>
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    isLive ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'
                   }`}
-                >
-                  <span>{b.vehicleId}</span>
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      isLive ? 'bg-emerald-400 animate-pulse' : 'bg-amber-400'
-                    }`}
-                  />
-                  <span className="text-[10px] opacity-75 font-normal">
-                    {b.vehicleId === '101' ? 'Thoothukudi' : b.vehicleId === '108' ? 'Direct' : b.vehicleId === '42A' ? 'Airport' : ''}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Right Controls: Map Mode & AI Voice Assistant Launcher */}
-          <div className="flex items-center gap-2 self-end sm:self-auto">
-            {/* Map Mode Selector */}
-            <div className="flex items-center bg-[#121824] p-1 rounded-xl border border-gray-700/70">
-              <button
-                type="button"
-                onClick={() => setMapMode('google')}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-                  mapMode === 'google'
-                    ? 'bg-[#F5B700] text-black'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Google Maps
+                />
+                <span className="text-[10px] opacity-75 font-normal">
+                  {b.vehicleId === '101' ? 'Thoothukudi' : b.vehicleId === '108' ? 'Direct' : b.vehicleId === '42A' ? 'Airport' : ''}
+                </span>
               </button>
-              <button
-                type="button"
-                onClick={() => setMapMode('vector')}
-                className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
-                  mapMode === 'vector'
-                    ? 'bg-[#F5B700] text-black'
-                    : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Schematic View
-              </button>
-            </div>
+            );
+          })}
+        </div>
 
-            {/* Voice Assistant Launcher */}
+        {/* Right Controls: Map Mode & AI Voice Assistant Launcher */}
+        <div className="flex items-center gap-2 self-end sm:self-auto">
+          {/* Map Mode Selector */}
+          <div className="flex items-center bg-gray-100 p-1 rounded-xl border border-gray-200">
             <button
               type="button"
-              onClick={() => setIsVoiceOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-[#F5B700] text-black font-bold text-xs shadow-lg hover:brightness-110 transition-all cursor-pointer"
+              onClick={() => setMapMode('google')}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                mapMode === 'google'
+                  ? 'bg-[#F5B700] text-black shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
             >
-              <Mic className="w-3.5 h-3.5" />
-              <span>Voice AI</span>
-              <span className="w-2 h-2 rounded-full bg-emerald-950 animate-ping" />
+              Google Maps
+            </button>
+            <button
+              type="button"
+              onClick={() => setMapMode('vector')}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-lg transition-colors cursor-pointer ${
+                mapMode === 'vector'
+                  ? 'bg-[#F5B700] text-black shadow-sm'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              Schematic View
             </button>
           </div>
+
+          {/* Voice Assistant Launcher */}
+          <button
+            type="button"
+            onClick={() => setIsVoiceOpen(true)}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-linear-to-r from-amber-400 to-[#F5B700] text-black font-bold text-xs shadow-sm hover:brightness-105 transition-all cursor-pointer"
+          >
+            <Mic className="w-3.5 h-3.5" />
+            <span>Voice AI</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
+          </button>
         </div>
+      </div>
 
         {/* Telemetry Status Advisory Banner */}
         {!isLiveGPS && (
@@ -167,7 +167,7 @@ export default function LiveTrackingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 items-stretch">
           
           {/* Left Column: Interactive Transit Map */}
-          <div className="lg:col-span-8 bg-[#0e131d] rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col min-h-[520px] lg:min-h-[660px] shadow-2xl">
+          <div className="lg:col-span-8 bg-[#0e131d] rounded-2xl border border-gray-800 relative overflow-hidden flex flex-col min-h-130 lg:min-h-165 shadow-2xl">
             
             {/* Map Header Overlay */}
             <div className="absolute top-14 left-2 sm:top-14 sm:left-2 z-20 pointer-events-none">
@@ -331,141 +331,141 @@ export default function LiveTrackingPage() {
           </div>
 
           {/* Right Column: Vehicle Tracking Details Panel */}
-          <div className="lg:col-span-4 bg-[#111622] rounded-2xl border border-gray-800 p-5 sm:p-6 flex flex-col justify-between shadow-2xl">
-            <div>
-              {/* Header Status & Speed */}
-              <div className="flex items-center justify-between pb-3 border-b border-gray-800/80">
-                <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${
-                  isLiveGPS
-                    ? 'bg-emerald-950/80 border border-emerald-500/40 text-emerald-400'
-                    : isOffline
-                    ? 'bg-rose-950/80 border border-rose-500/40 text-rose-400'
-                    : 'bg-amber-950/80 border border-amber-500/40 text-amber-400'
-                }`}>
-                  <span className={`w-2 h-2 rounded-full ${isLiveGPS ? 'bg-emerald-400 animate-pulse' : isOffline ? 'bg-rose-400' : 'bg-amber-400'}`} />
-                  <span>{bus.status || "LIVE IN-TRANSIT"}</span>
+        <div className="lg:col-span-4 bg-white rounded-2xl border border-gray-200 p-5 sm:p-6 flex flex-col justify-between shadow-sm">
+          <div>
+            {/* Header Status & Speed */}
+            <div className="flex items-center justify-between pb-3 border-b border-gray-200">
+              <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold ${
+                isLiveGPS
+                  ? 'bg-emerald-50 border border-emerald-200 text-emerald-700'
+                  : isOffline
+                  ? 'bg-rose-50 border border-rose-200 text-rose-700'
+                  : 'bg-amber-50 border border-amber-200 text-amber-700'
+              }`}>
+                <span className={`w-2 h-2 rounded-full ${isLiveGPS ? 'bg-emerald-500 animate-pulse' : isOffline ? 'bg-rose-500' : 'bg-amber-500'}`} />
+                <span>{bus.status || "LIVE IN-TRANSIT"}</span>
+              </div>
+              <span className="text-xs font-mono font-semibold text-gray-500">
+                Speed: <strong className="text-gray-900 font-bold">{bus.speed} {bus.speedUnit || "km/h"}</strong>
+              </span>
+            </div>
+
+            {/* Title & Driver */}
+            <div className="mt-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">
+                  {bus.name}
+                </h2>
+                <span className="text-xs font-bold text-[#B8860B] bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                  {bus.fare || '$2.75'}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Driver: <span className="text-gray-800 font-semibold">{bus.driverName} (ID: {bus.driverId})</span>
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Corridor: <span className="text-[#B8860B] font-semibold">{bus.corridorName}</span>
+              </p>
+            </div>
+
+            {/* AI Recommendation Box */}
+            {bus.recommendationReason && (
+              <div className="mt-4 p-3 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 leading-relaxed flex items-start gap-2">
+                <Sparkles className="w-4 h-4 text-[#B8860B] shrink-0 mt-0.5" />
+                <div>
+                  <strong className="text-gray-900 block mb-0.5">AI Commuter Intelligence</strong>
+                  <span>{bus.recommendationReason}</span>
                 </div>
-                <span className="text-xs font-mono font-semibold text-gray-400">
-                  Speed: <strong className="text-white font-bold">{bus.speed} {bus.speedUnit || "km/h"}</strong>
+              </div>
+            )}
+
+            {/* Live ETA Countdown */}
+            <div className="mt-4">
+              <LiveEtaCountdown
+                vehicleId={bus.vehicleId || bus.id}
+                variant="card"
+                showTimeline={true}
+                showControls={true}
+              />
+            </div>
+
+            {/* Route Schedule & Stops list */}
+            <div className="mt-4">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                  Route Schedule & Stops
+                </h3>
+                <span className="text-[11px] text-gray-500 font-mono">
+                  {bus.stops?.length || 0} Scheduled Points
                 </span>
               </div>
 
-              {/* Title & Driver */}
-              <div className="mt-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-extrabold text-white tracking-tight">
-                    {bus.name}
-                  </h2>
-                  <span className="text-xs font-bold text-[#F5B700] bg-[#1a2233] px-2 py-0.5 rounded border border-gray-700">
-                    {bus.fare || '$2.75'}
-                  </span>
-                </div>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Driver: <span className="text-gray-200 font-semibold">{bus.driverName} (ID: {bus.driverId})</span>
-                </p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  Corridor: <span className="text-[#F5B700] font-semibold">{bus.corridorName}</span>
-                </p>
-              </div>
+              <div className="space-y-2 max-h-47.5 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-300">
+                {bus.stops?.map((stop, idx) => {
+                  const isPassed = stop.status === "passed";
+                  const isActive = stop.status === "active";
 
-              {/* AI Recommendation Box if available */}
-              {bus.recommendationReason && (
-                <div className="mt-4 p-3 rounded-xl bg-[#161f30] border border-amber-500/20 text-xs text-amber-200/90 leading-relaxed flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-[#F5B700] shrink-0 mt-0.5" />
-                  <div>
-                    <strong className="text-white block mb-0.5">AI Commuter Intelligence</strong>
-                    <span>{bus.recommendationReason}</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Live Real-Time ETA Countdown Component (Updates every 1s using React Timer) */}
-              <div className="mt-4">
-                <LiveEtaCountdown
-                  vehicleId={bus.vehicleId || bus.id}
-                  variant="card"
-                  showTimeline={true}
-                  showControls={true}
-                />
-              </div>
-
-              {/* Route Schedule & Stops list */}
-              <div className="mt-4">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                    Route Schedule & Stops
-                  </h3>
-                  <span className="text-[11px] text-gray-400 font-mono">
-                    {bus.stops?.length || 0} Scheduled Points
-                  </span>
-                </div>
-
-                <div className="space-y-2 max-h-[190px] overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-gray-700">
-                  {bus.stops?.map((stop, idx) => {
-                    const isPassed = stop.status === "passed";
-                    const isActive = stop.status === "active";
-
-                    return (
-                      <div
-                        key={idx}
-                        className={`flex items-center justify-between p-2 rounded-lg text-xs transition-colors ${
-                          isActive
-                            ? "bg-[#182133] border border-gray-700 font-bold"
-                            : "hover:bg-gray-800/40"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`w-2 h-2 rounded-full ${
-                              isPassed
-                                ? "bg-gray-600"
-                                : isActive
-                                ? "bg-[#F5B700] ring-4 ring-[#F5B700]/20"
-                                : "border-2 border-gray-500"
-                            }`}
-                          />
-                          <span className={isPassed ? "text-gray-500 line-through" : isActive ? "text-white" : "text-gray-300"}>
-                            {stop.name}
-                          </span>
-                        </div>
-
+                  return (
+                    <div
+                      key={idx}
+                      className={`flex items-center justify-between p-2 rounded-lg text-xs transition-colors ${
+                        isActive
+                          ? "bg-amber-50 border border-amber-200 font-bold"
+                          : "hover:bg-gray-50"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
                         <span
-                          className={`font-mono text-[11px] ${
+                          className={`w-2 h-2 rounded-full ${
                             isPassed
-                              ? "text-gray-500 font-normal"
+                              ? "bg-gray-300"
                               : isActive
-                              ? "text-[#F5B700] font-bold"
-                              : "text-gray-400"
+                              ? "bg-[#F5B700] ring-4 ring-[#F5B700]/25"
+                              : "border-2 border-gray-400"
                           }`}
-                        >
-                          {stop.time}
+                        />
+                        <span className={isPassed ? "text-gray-400 line-through" : isActive ? "text-gray-900" : "text-gray-700"}>
+                          {stop.name}
                         </span>
                       </div>
-                    );
-                  })}
-                </div>
+
+                      <span
+                        className={`font-mono text-[11px] ${
+                          isPassed
+                            ? "text-gray-400 font-normal"
+                            : isActive
+                            ? "text-[#B8860B] font-bold"
+                            : "text-gray-500"
+                        }`}
+                      >
+                        {stop.time}
+                      </span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
-
-            {/* Bottom Actions */}
-            <div className="mt-4 pt-3 border-t border-gray-800 flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setIsVoiceOpen(true)}
-                className="flex-1 py-2.5 bg-gradient-to-r from-amber-500 to-[#F5B700] text-black text-xs font-bold rounded-xl transition-all hover:brightness-110 flex items-center justify-center gap-1.5 cursor-pointer shadow-lg"
-              >
-                <Mic className="w-3.5 h-3.5" />
-                <span>Voice Assistant</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate('/report')}
-                className="py-2.5 px-3 bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer"
-              >
-                Report Crowd
-              </button>
-            </div>
           </div>
+
+          {/* Bottom Actions */}
+          <div className="mt-4 pt-3 border-t border-gray-200 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setIsVoiceOpen(true)}
+              className="flex-1 py-2.5 bg-linear-to-r from-amber-400 to-[#F5B700] text-black text-xs font-bold rounded-xl transition-all hover:brightness-105 flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
+            >
+              <Mic className="w-3.5 h-3.5" />
+              <span>Voice Assistant</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/report')}
+              className="py-2.5 px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-xl transition-colors cursor-pointer border border-gray-200"
+            >
+              Report Crowd
+            </button>
+          </div>
+        </div>
 
         </div>
       </main>

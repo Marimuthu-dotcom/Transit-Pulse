@@ -117,20 +117,23 @@ export async function login(req, res) {
 
 export async function googleAuth(req, res) {
   try {
-    const { credential } = req.body || {};
+    const { credential, intent } = req.body || {};
+
     if (!credential) {
       return res.status(400).json({ error: 'Missing Google credential' });
     }
     if (!GOOGLE_CLIENT_ID) {
       return res.status(500).json({ error: 'Server missing GOOGLE_CLIENT_ID' });
     }
+    if (intent !== 'login' && intent !== 'signup') {
+      return res.status(400).json({ error: 'Missing or invalid intent (must be "login" or "signup")' });
+    }
 
-    // 1. Verify the Google credential with Google itself
+    // Verify the credential with Google
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
       audience: GOOGLE_CLIENT_ID,
     });
-    
     const payload = ticket.getPayload();
     const { email, name, picture, email_verified } = payload;
 
@@ -138,21 +141,43 @@ export async function googleAuth(req, res) {
       return res.status(401).json({ error: 'Google account email not verified' });
     }
 
-    // 2. Find or create the local user
-    let user = await findUserByEmail(email);
-    if (!user) {
-      // Password is not applicable for Google users — store an empty hash marker
+    const existingUser = await findUserByEmail(email);
+
+    // ── SIGN IN flow ─────────────────────────────────────────────
+    if (intent === 'login') {
+      if (!existingUser) {
+        return res.status(404).json({
+          error: 'No account found with this Google email. Please sign up first.',
+          code: 'NO_ACCOUNT',
+        });
+      }
+      // User exists → issue tokens
+      const tokens = issueTokens(res, existingUser);
+      return res.json({ ...tokens, picture });
+    }
+
+    // ── SIGN UP flow ─────────────────────────────────────────────
+    if (intent === 'signup') {
+      if (existingUser) {
+        return res.status(409).json({
+          error: 'An account with this email already exists. Please sign in instead.',
+          code: 'ACCOUNT_EXISTS',
+        });
+      }
+      // New user → create account
       const password_hash = await bcrypt.hash(
-        // random unguessable string; user can never log in with this
         crypto.randomBytes(32).toString('hex'),
         10
       );
-      user = await createUser({ name: name || email.split('@')[0], email, password_hash });
-    }
+      const newUser = await createUser({
+        name: name || email.split('@')[0],
+        email,
+        password_hash,
+      });
 
-    // 3. Issue our own tokens
-    const tokens = issueTokens(res, user);
-    return res.json({ ...tokens, picture });
+      const tokens = issueTokens(res, newUser);
+      return res.status(201).json({ ...tokens, picture });
+    }
   } catch (err) {
     console.error('googleAuth error:', err);
     return res.status(401).json({ error: 'Google authentication failed' });

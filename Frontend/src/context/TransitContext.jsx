@@ -14,6 +14,33 @@ import { apiJson, setAccessToken } from '../api/client.js';
 const TransitContext = createContext(null);
 
 export function TransitProvider({ children }) {
+
+  function normaliseUser(raw) {
+  if (!raw) return null;
+  return {
+    id: raw.id,
+    email: raw.email,
+    name: raw.name,
+    nickname: raw.nickname || raw.name || 'Commuter',
+    phone: raw.phone || '',
+    avatar: raw.avatar || raw.picture ||
+      `https://ui-avatars.com/api/?name=${encodeURIComponent(raw.name || 'Commuter')}&background=F5B700&color=000&bold=true`,
+    memberSince: raw.memberSince || new Date().getFullYear().toString(),
+    savedCorridorsCount: raw.savedCorridorsCount ?? 0,
+    avgDailyCommute: raw.avgDailyCommute || '0 min',
+    tier: raw.tier || 'Standard Rider',
+    stats: raw.stats || { crowdReportsSubmitted: 0, ridersHelpedToday: 0 },
+    preferences: {
+      stationSearchRadius: '500 meters',
+      preferredMaxCrowdIndex: 'Medium (< 50% capacity)',
+      urgentServiceDisruptions: true,
+      minorCorridorDelayAdvisories: true,
+      platformProximityWarnings: false,
+      ...(raw.preferences || {}),
+    },
+  };
+}
+
   // ── Auth state ──
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -60,7 +87,7 @@ export function TransitProvider({ children }) {
         const { user: me } = await apiJson('/api/auth/me');
 
         if (!cancelled) {
-          setUser(me);
+          setUser(normaliseUser(me));
           setIsAuthenticated(true);
         }
       } catch {
@@ -89,15 +116,15 @@ export function TransitProvider({ children }) {
     return () => clearInterval(interval);
   }, []);
 
-  // ── Auth actions ──
 
+  // ── Auth actions ──
   const login = useCallback(async ({ email, password }) => {
     const data = await apiJson('/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
     });
     setAccessToken(data.accessToken);
-    setUser(data.user);
+    setUser(normaliseUser(data.user));
     setIsAuthenticated(true);
     return data.user;
   }, []);
@@ -108,23 +135,21 @@ export function TransitProvider({ children }) {
       body: JSON.stringify({ name, email, password }),
     });
     setAccessToken(data.accessToken);
-    setUser(data.user);
+    setUser(normaliseUser(data.user));
     setIsAuthenticated(true);
     return data.user;
   }, []);
 
-  const googleLogin = useCallback(async (credential) => 
-  {
-    const data = await apiJson('/api/auth/google', {
-      method: 'POST',
-      body: JSON.stringify({ credential }),
-    });
-    
-    setAccessToken(data.accessToken);
-    setUser(data.user);
-    setIsAuthenticated(true);
-    return { ...data.user, picture: data.picture };
-  }, []);
+  const googleLogin = useCallback(async (credential, intent = 'login') => {
+  const data = await apiJson('/api/auth/google', {
+    method: 'POST',
+    body: JSON.stringify({ credential, intent }),
+  });
+  setAccessToken(data.accessToken);
+  setUser(normaliseUser({ ...data.user, picture: data.picture }));
+  setIsAuthenticated(true);
+  return { ...data.user, picture: data.picture };
+}, []);
 
   const logout = useCallback(async () => {
     try {
@@ -143,9 +168,10 @@ export function TransitProvider({ children }) {
   };
 
   const updateUserPreferences = (newPrefs) => {
-    setUser((prev) => prev ? { ...prev, preferences: { ...prev.preferences, ...newPrefs } } : prev);
-  };
-
+  setUser((prev) =>
+    prev ? { ...prev, preferences: { ...(prev.preferences || {}), ...newPrefs } } : prev
+  );
+};
   // ── Non-auth actions (unchanged) ──
   const addSavedRoute = (newRoute) => {
     const route = { id: `sr-${Date.now()}`, ...newRoute };

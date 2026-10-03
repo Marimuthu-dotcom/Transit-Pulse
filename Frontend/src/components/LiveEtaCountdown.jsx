@@ -333,7 +333,7 @@ export default function LiveEtaCountdown({
     <div
       className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
         variant === 'hero'
-          ? 'bg-gradient-to-b from-[#161f30] to-[#0e1420] border-amber-500/30 p-5 sm:p-6 shadow-2xl'
+          ? 'bg-linear-to-b from-[#161f30] to-[#0e1420] border-amber-500/30 p-5 sm:p-6 shadow-2xl'
           : 'bg-[#161c28] border-gray-700/80 p-4 sm:p-5 shadow-xl'
       } ${className}`}
       role="timer"
@@ -352,7 +352,7 @@ export default function LiveEtaCountdown({
             <span className="text-[10px] font-bold tracking-wider uppercase text-gray-400 block">
               LIVE ETA TELEMETRY
             </span>
-            <span className="text-xs font-semibold text-gray-200 truncate max-w-[180px] sm:max-w-xs block">
+            <span className="text-xs font-semibold text-gray-200 truncate max-w-45 sm:max-w-xs block">
               {telemetry?.nextStopName || 'Loading stop...'}
             </span>
           </div>
@@ -393,86 +393,91 @@ export default function LiveEtaCountdown({
       </div>
 
       {/* Main Countdown Display */}
-      <div className="my-4 flex flex-col sm:flex-row sm:items-baseline justify-between gap-3">
-        <div>
-          <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider block mb-1">
-            ESTIMATED ARRIVAL IN
-          </span>
+            {/* ─── ROW 1: Estimated Arrival ─── */}
+      <div className="py-5">
+        <span className="text-xs font-bold text-gray-300 uppercase tracking-wider block mb-3">
+          ESTIMATED ARRIVAL IN
+        </span>
 
-          {isOffline ? (
-            <div className="flex items-center gap-2 text-rose-400">
-              <AlertCircle className="w-6 h-6" />
-              <div>
-                <span className="text-xl font-bold font-mono">SIGNAL LOST</span>
-                <p className="text-[11px] text-gray-400">Telemetry transponder offline (48m+)</p>
-              </div>
+        {isOffline ? (
+          <div className="flex items-center gap-3 text-rose-400">
+            <AlertCircle className="w-7 h-7" />
+            <div>
+              <span className="text-2xl font-bold font-mono">SIGNAL LOST</span>
+              <p className="text-xs text-gray-400 mt-1">Telemetry transponder offline (48m+)</p>
             </div>
-          ) : isArrived ? (
-            <div className="flex items-center gap-2 text-emerald-400">
-              <div className="w-4 h-4 rounded-full bg-emerald-400 animate-ping shrink-0" />
-              <div>
-                <span className="text-2xl sm:text-3xl font-black font-mono tracking-tight">
-                  ARRIVING NOW
-                </span>
-                <p className="text-xs text-emerald-300/90 font-medium">Bus is pulling up to the platform</p>
-              </div>
-            </div>
-          ) : (
-            /* Digital Stopwatch Display with glowing seconds tick */
-            <div className="flex items-baseline gap-1.5 font-mono select-none">
-              {timeFormatted.hours && (
-                <>
-                  <div className="flex flex-col items-center">
-                    <span className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-                      {timeFormatted.hours}
-                    </span>
-                    <span className="text-[9px] text-gray-500 uppercase font-sans font-semibold">Hours</span>
-                  </div>
-                  <span className="text-2xl sm:text-3xl font-extrabold text-[#F5B700] mx-0.5 animate-pulse">:</span>
-                </>
-              )}
-
-              <div className="flex flex-col items-center">
-                <span className="text-3xl sm:text-5xl font-black text-[#F5B700] tracking-tight drop-shadow-sm">
-                  {timeFormatted.mins}
-                </span>
-                <span className="text-[10px] text-gray-400 uppercase font-sans font-semibold mt-0.5">Mins</span>
-              </div>
-
-              <span className={`text-3xl sm:text-5xl font-black transition-opacity duration-200 mx-0.5 ${
-                tickTock ? 'text-[#F5B700]' : 'text-gray-600'
-              }`}>
-                :
+          </div>
+        ) : isArrived ? (
+          <div className="flex items-center gap-3 text-emerald-400">
+            <div className="w-4 h-4 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            <div>
+              <span className="text-3xl sm:text-4xl font-black font-mono tracking-tight">
+                ARRIVING NOW
               </span>
-
-              <div className="flex flex-col items-center">
-                <span className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-                  {timeFormatted.secs}
-                </span>
-                <span className="text-[10px] text-gray-400 uppercase font-sans font-semibold mt-0.5">Secs</span>
-              </div>
-
-              {/* Real-time seconds heartbeat ticker */}
-              <div className="ml-3 hidden sm:flex flex-col items-start text-left">
-                <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400">
-                  <Activity className="w-3.5 h-3.5 animate-pulse text-emerald-400" />
-                  <span>1s Real-time Tick</span>
-                </span>
-                <span className="text-[10px] text-gray-400 font-sans">
-                  {telemetry?.currentSpeed ? `${telemetry.currentSpeed} km/h speed` : 'GPS synchronized'}
-                </span>
-              </div>
+              <p className="text-sm text-emerald-300/90 font-medium mt-1">Bus is pulling up to the platform</p>
             </div>
-          )}
+          </div>
+        ) : (
+          <div className="flex items-baseline gap-2 font-mono select-none">
+            {timeFormatted.hours && (
+              <>
+                <div className="flex flex-col items-center">
+                  <span className="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">
+                    {timeFormatted.hours}
+                  </span>
+                  <span className="text-[10px] text-gray-500 uppercase font-sans font-semibold mt-1">Hours</span>
+                </div>
+                <span className="text-3xl sm:text-4xl font-extrabold text-[#F5B700] mx-1 animate-pulse">:</span>
+              </>
+            )}
+
+            <div className="flex flex-col items-center">
+              <span className="text-4xl sm:text-6xl font-black text-[#F5B700] tracking-tight drop-shadow-sm">
+                {timeFormatted.mins}
+              </span>
+              <span className="text-[11px] text-gray-400 uppercase font-sans font-semibold mt-1">Mins</span>
+            </div>
+
+            <span className={`text-4xl sm:text-6xl font-black transition-opacity duration-200 mx-1 ${
+              tickTock ? 'text-[#F5B700]' : 'text-gray-600'
+            }`}>
+              :
+            </span>
+
+            <div className="flex flex-col items-center">
+              <span className="text-4xl sm:text-6xl font-black text-white tracking-tight">
+                {timeFormatted.secs}
+              </span>
+              <span className="text-[11px] text-gray-400 uppercase font-sans font-semibold mt-1">Secs</span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ─── ROW 2: Real-time Tracking + Schedule Status ─── */}
+      <div className="py-4 border-t border-gray-700/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        {/* Left: Real-time tick info */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[#121824] border border-gray-700 flex items-center justify-center">
+            <Activity className="w-4 h-4 text-emerald-400 animate-pulse" />
+          </div>
+          <div>
+            <span className="block text-xs font-semibold text-emerald-400">
+              {isPaused ? 'Timer Paused' : '1s Real-time Tick'}
+            </span>
+            <span className="block text-[11px] text-gray-400 mt-0.5">
+              {telemetry?.currentSpeed ? `${telemetry.currentSpeed} km/h · GPS synchronized` : 'GPS synchronized'}
+            </span>
+          </div>
         </div>
 
-        {/* Speed / Delay / Schedule pill */}
+        {/* Right: Schedule status */}
         <div className="text-left sm:text-right">
-          <span className="text-[10px] font-bold tracking-wider uppercase text-gray-400 block">
+          <span className="text-[11px] font-bold tracking-wider uppercase text-gray-400 block mb-1">
             SCHEDULE STATUS
           </span>
           <span
-            className={`inline-block mt-1 font-bold text-xs sm:text-sm ${
+            className={`inline-block font-bold text-sm sm:text-base ${
               telemetry?.statusType === 'danger'
                 ? 'text-rose-400'
                 : telemetry?.statusType === 'warning'
@@ -482,7 +487,7 @@ export default function LiveEtaCountdown({
           >
             {telemetry?.status || 'ON TIME'}
           </span>
-          <span className="block text-[10px] text-gray-400 font-mono mt-0.5">
+          <span className="block text-[11px] text-gray-400 font-mono mt-0.5">
             Dest: {telemetry?.destination || 'Terminal'}
           </span>
         </div>
@@ -503,7 +508,7 @@ export default function LiveEtaCountdown({
               className={`h-full rounded-full transition-all duration-1000 ${
                 isArrived
                   ? 'bg-emerald-400'
-                  : 'bg-gradient-to-r from-amber-500 via-[#F5B700] to-yellow-300'
+                  : 'bg-linear-to-r from-amber-500 via-[#F5B700] to-yellow-300'
               }`}
               style={{ width: `${progressPercent}%` }}
             />
